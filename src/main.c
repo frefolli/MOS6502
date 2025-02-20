@@ -15,10 +15,9 @@ void execute_program(struct VM* vm, uint8_t* program, uint16_t program_length) {
   uint16_t end_of_program = vm->PC + program_length;
   while (vm->PC < end_of_program) {
     VM__step(vm);
-    printf("Mid-execution\n");
-    VM__dump(vm);
   }
   printf("Post-execution\n");
+  VM__dump_mem(vm);
   VM__dump(vm);
 }
 
@@ -42,7 +41,7 @@ int main(int argc, char **argv) {
     // load n-2
     LDA_zpg, 0x01,
     // add n-1
-    ADC_zpg, 0x01,
+    ADC_zpg, 0x02,
     // save n-1 to n-2
     LDX_zpg, 0x02,
     STX_zpg, 0x01,
