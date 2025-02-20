@@ -19,6 +19,8 @@ void execute_program(struct VM* vm, uint8_t* program, uint16_t program_length) {
 int main(int argc, char **argv) {
   struct VM vm;
   uint8_t program[] = {
+    ADC_imm, 0x17,
+    AND_imm, 0x27
   };
   execute_program(&vm, program, sizeof(program) / sizeof(uint8_t));
 }
