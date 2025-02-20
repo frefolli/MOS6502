@@ -1,3 +1,5 @@
 builddir
 __pycache__
 old
+docs/html
+docs/latex

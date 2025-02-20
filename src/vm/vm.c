@@ -7,6 +7,7 @@
 #include <assert.h>
 
 #define BASE_ADDRESS 0x0600
+#define PAGE_SIZE 0x100
 
 void VM__clear(struct VM* vm) {
   if (vm == NULL)
@@ -226,6 +227,20 @@ void VM__dump_stack(struct VM* vm) {
     uint8_t M01 = vm->stack[idx++];
     uint8_t M02 = vm->stack[idx++];
     uint8_t M03 = vm->stack[idx++];
+    if (M00 || M01 || M02 || M03) {
+      printf("%4x: %2x %2x %2x %2x\n", addr, M00, M01, M02, M03);
+    }
+  }
+}
+
+void VM__dump_zeropage(struct VM* vm) {
+  uint16_t mem_size = PAGE_SIZE;
+  for (uint16_t idx = 0; idx < mem_size; ) {
+    uint16_t addr = idx;
+    uint8_t M00 = vm->mem[idx++];
+    uint8_t M01 = vm->mem[idx++];
+    uint8_t M02 = vm->mem[idx++];
+    uint8_t M03 = vm->mem[idx++];
     if (M00 || M01 || M02 || M03) {
       printf("%4x: %2x %2x %2x %2x\n", addr, M00, M01, M02, M03);
     }

@@ -32,6 +32,7 @@ void VM__step(struct VM* vm);
 void VM__dump(struct VM* vm);
 void VM__dump_mem(struct VM* vm);
 void VM__dump_stack(struct VM* vm);
+void VM__dump_zeropage(struct VM* vm);
 uint8_t VM__read_next_opcode_from_mem(struct VM* vm);
 uint16_t VM__read_next_immediate_from_mem(struct VM* vm);
 uint16_t VM__read_next_address_from_mem(struct VM* vm);

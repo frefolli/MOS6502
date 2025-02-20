@@ -162,3 +162,4 @@ exe = executable('main.exe', [
   ], include_directories: ['./include'], link_with: [libvm])
 
 subdir('./tests')
+subdir('./examples')

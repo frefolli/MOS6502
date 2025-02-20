@@ -222,7 +222,10 @@ values = [
 
 def fib(n):
   arr = [1, 1]
+  idx = [0, 1]
   for i in range(n):
     arr.append(arr[-1] + arr[-2])
+    idx.append(i + 2)
   print(arr)
-print(fib(5))
+  print(idx)
+fib(10)
