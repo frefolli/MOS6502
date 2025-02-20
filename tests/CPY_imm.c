@@ -2,10 +2,10 @@
 #include <vm/opcodes.h>
 
 int main(void) {
+  uint8_t program[] = {CPY_imm};
   struct VM vm;
   VM__clear(&vm);
   VM__reset(&vm);
-  vm.mem[0] = CPY_imm;
-  vm.mem[1] = 0x00;
+  VM__load(&vm, program, sizeof(program) / sizeof(uint8_t));
   VM__step(&vm);
 }

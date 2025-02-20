@@ -2,10 +2,10 @@
 #include <vm/opcodes.h>
 
 int main(void) {
+  uint8_t program[] = {STA_abs_Y};
   struct VM vm;
   VM__clear(&vm);
   VM__reset(&vm);
-  vm.mem[0] = STA_abs_Y;
-  vm.mem[1] = 0x00;
+  VM__load(&vm, program, sizeof(program) / sizeof(uint8_t));
   VM__step(&vm);
 }

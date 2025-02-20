@@ -45,6 +45,6 @@ uint16_t VM__address__ind_Y(struct VM* vm) {
 }
 
 uint16_t VM__address__rel(struct VM* vm) {
-  uint16_t addr = VM__read_next_immediate_from_mem(vm);
+  int8_t addr = VM__read_next_immediate_from_mem(vm);
   return vm->PC + addr;
 }

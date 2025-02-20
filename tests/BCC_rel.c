@@ -2,10 +2,10 @@
 #include <vm/opcodes.h>
 
 int main(void) {
+  uint8_t program[] = {BCC_rel};
   struct VM vm;
   VM__clear(&vm);
   VM__reset(&vm);
-  vm.mem[0] = BCC_rel;
-  vm.mem[1] = 0x00;
+  VM__load(&vm, program, sizeof(program) / sizeof(uint8_t));
   VM__step(&vm);
 }

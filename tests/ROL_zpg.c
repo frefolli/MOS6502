@@ -2,10 +2,10 @@
 #include <vm/opcodes.h>
 
 int main(void) {
+  uint8_t program[] = {ROL_zpg};
   struct VM vm;
   VM__clear(&vm);
   VM__reset(&vm);
-  vm.mem[0] = ROL_zpg;
-  vm.mem[1] = 0x00;
+  VM__load(&vm, program, sizeof(program) / sizeof(uint8_t));
   VM__step(&vm);
 }

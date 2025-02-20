@@ -152,70 +152,77 @@ values = [
   ('TYA_impl', 0x98),
 ]
 
-for (name, value) in values:
-  filepath = "./tests/%s.c" % name
-  with open(filepath, mode="w") as file:
-    file.write("#include <vm/vm.h>\n")
-    file.write("#include <vm/opcodes.h>\n")
-    file.write("\n")
-    file.write("int main(void) {\n")
-    file.write("  struct VM vm;\n")
-    file.write("  VM__clear(&vm);\n")
-    file.write("  VM__reset(&vm);\n")
-    file.write("  vm.mem[0] = %s;\n" % name)
-    file.write("  vm.mem[1] = 0x00;\n")
-    file.write("  VM__step(&vm);\n")
-    file.write("}\n")
+# for (name, value) in values:
+#   filepath = "./tests/%s.c" % name
+#   with open(filepath, mode="w") as file:
+#     file.write("#include <vm/vm.h>\n")
+#     file.write("#include <vm/opcodes.h>\n")
+#     file.write("\n")
+#     file.write("int main(void) {\n")
+#     file.write("  uint8_t program[] = {%s};\n" % name)
+#     file.write("  struct VM vm;\n")
+#     file.write("  VM__clear(&vm);\n")
+#     file.write("  VM__reset(&vm);\n")
+#     file.write("  VM__load(&vm, program, sizeof(program) / sizeof(uint8_t));\n")
+#     file.write("  VM__step(&vm);\n")
+#     file.write("}\n")
 
-for (name, value) in values:
-  filepath = "./src/vm/%s.c" % name
-  with open(filepath, mode="w") as file:
-    file.write("#include <vm/%s.h>\n" % name)
-    file.write("#include <vm/macros.h>\n")
-    file.write("#include <vm/addressing.h>\n")
-    file.write("\n")
-    file.write("void VM__%s(struct VM* vm) {\n" % (name, ))
-    file.write("  TODO();\n")
-    file.write("}\n")
+# for (name, value) in values:
+#   filepath = "./src/vm/%s.c" % name
+#   with open(filepath, mode="w") as file:
+#     file.write("#include <vm/%s.h>\n" % name)
+#     file.write("#include <vm/macros.h>\n")
+#     file.write("#include <vm/addressing.h>\n")
+#     file.write("\n")
+#     file.write("void VM__%s(struct VM* vm) {\n" % (name, ))
+#     file.write("  TODO();\n")
+#     file.write("}\n")
 
-for (name, value) in values:
-  filepath = "./include/vm/%s.h" % name
-  with open(filepath, mode="w") as file:
-    label = ("VM_%s_H" % name).upper()
-    file.write("#ifndef %s\n" % label)
-    file.write("#define %s\n" % label)
-    file.write("#include <vm/vm.h>\n")
-    file.write("\n")
-    file.write("void VM__%s(struct VM* vm);\n" % (name, ))
-    file.write("#endif//%s\n" % label)
+# for (name, value) in values:
+#   filepath = "./include/vm/%s.h" % name
+#   with open(filepath, mode="w") as file:
+#     label = ("VM_%s_H" % name).upper()
+#     file.write("#ifndef %s\n" % label)
+#     file.write("#define %s\n" % label)
+#     file.write("#include <vm/vm.h>\n")
+#     file.write("\n")
+#     file.write("void VM__%s(struct VM* vm);\n" % (name, ))
+#     file.write("#endif//%s\n" % label)
+# 
+# filepath = "./include/vm/opcodes.h"
+# with open(filepath, mode="w") as file:
+#   label = "VM_OPCODES_H"
+#   file.write("#ifndef %s\n" % label)
+#   file.write("#define %s\n" % label)
+#   file.write("typedef enum {\n")
+#   for (name, value) in values:
+#     file.write("  %s = %s,\n" % (name, hex(value)))
+#   file.write("} VM_OPCODES;\n")
+#   file.write("#endif//%s\n" % label)
+# 
+# filepath = "./include/vm/instructions.h"
+# with open(filepath, mode="w") as file:
+#   label = "VM_INSTRUCTIONS_H"
+#   file.write("#ifndef %s\n" % label)
+#   file.write("#define %s\n" % label)
+#   for (name, value) in values:
+#     file.write('#include <vm/%s.h>\n' % name)
+#   file.write("#endif//%s\n" % label)
+# 
+# filepath = "./tests/meson.build"
+# with open(filepath, mode="w") as file:
+#   for (name, value) in values:
+#     file.write("test_%s = executable('test_%s', [\n" % (name, name))
+#     file.write("    './%s.c',\n" % (name,))
+#     file.write("  ], install : false,\n")
+#     file.write("  include_directories: ['../include'],\n")
+#     file.write("  link_with: libvm)\n")
+#     file.write("test('%s', test_%s)\n" % (name, name))
+#     file.write("\n")
 
-filepath = "./include/vm/opcodes.h"
-with open(filepath, mode="w") as file:
-  label = "VM_OPCODES_H"
-  file.write("#ifndef %s\n" % label)
-  file.write("#define %s\n" % label)
-  file.write("typedef enum {\n")
-  for (name, value) in values:
-    file.write("  %s = %s,\n" % (name, hex(value)))
-  file.write("} VM_OPCODES;\n")
-  file.write("#endif//%s\n" % label)
-
-filepath = "./include/vm/instructions.h"
-with open(filepath, mode="w") as file:
-  label = "VM_INSTRUCTIONS_H"
-  file.write("#ifndef %s\n" % label)
-  file.write("#define %s\n" % label)
-  for (name, value) in values:
-    file.write('#include <vm/%s.h>\n' % name)
-  file.write("#endif//%s\n" % label)
-
-filepath = "./tests/meson.build"
-with open(filepath, mode="w") as file:
-  for (name, value) in values:
-    file.write("test_%s = executable('test_%s', [\n" % (name, name))
-    file.write("    './%s.c',\n" % (name,))
-    file.write("  ], install : false,\n")
-    file.write("  include_directories: ['../include'],\n")
-    file.write("  link_with: libvm)\n")
-    file.write("test('%s', test_%s)\n" % (name, name))
-    file.write("\n")
+def fib(n):
+  arr = [1, 1]
+  for i in range(n):
+    arr.append(arr[-1] + arr[-2])
+  print(arr)
+print(fib(5))

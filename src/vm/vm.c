@@ -6,10 +6,13 @@
 #include <stdbool.h>
 #include <assert.h>
 
+#define BASE_ADDRESS 0x0600
+
 void VM__clear(struct VM* vm) {
   if (vm == NULL)
     return;
-  memset(vm, 0, sizeof(struct VM));
+  (void)memset(vm, 0, sizeof(struct VM));
+  vm->RES = BASE_ADDRESS;
 }
 
 void VM__reset(struct VM* vm) {
@@ -179,13 +182,54 @@ void VM__step(struct VM* vm) {
   }
 }
 
+void VM__load(struct VM* vm, uint8_t* program, uint16_t program_length) {
+  uint32_t first_segment_length = (sizeof(vm->mem) / sizeof(uint8_t)) - vm->RES;
+  if (program_length > first_segment_length) {
+    memcpy(vm->mem + vm->RES, program, first_segment_length);
+    uint16_t remaing_of_program = program_length - first_segment_length;
+    uint32_t second_segment_length = vm->RES - 0x0000;
+    assert (remaing_of_program <= second_segment_length);
+    (void)memcpy(vm->mem, program + first_segment_length, remaing_of_program);
+  } else {
+    (void)memcpy(vm->mem + vm->RES, program, program_length);
+  }
+}
+
 void VM__dump(struct VM* vm) {
-  printf("PC IRQ SR AC XR YR SP\n");
-  printf("%2x  %2x %2x %2x %2x %2x %2x\n",
-         vm->PC, vm->IRQ,
-         vm->SR, vm->A,
-         vm->X, vm->Y,
-         vm->SP);
+  printf(" PC  RES  IRQ  SR AC XR YR SP\n");
+  printf("%4x %4x %4x %2x %2x %2x %2x %2x\n",
+         vm->PC, vm->RES,
+         vm->IRQ, vm->SR,
+         vm->A, vm->X,
+         vm->Y, vm->SP);
+}
+
+void VM__dump_mem(struct VM* vm) {
+  uint32_t mem_size = sizeof(vm->mem) / sizeof(uint8_t);
+  for (uint32_t idx = 0; idx < mem_size; ) {
+    uint32_t addr = idx;
+    uint8_t M00 = vm->mem[idx++];
+    uint8_t M01 = vm->mem[idx++];
+    uint8_t M02 = vm->mem[idx++];
+    uint8_t M03 = vm->mem[idx++];
+    if (M00 || M01 || M02 || M03) {
+      printf("%4x: %2x %2x %2x %2x\n", addr, M00, M01, M02, M03);
+    }
+  }
+}
+
+void VM__dump_stack(struct VM* vm) {
+  uint16_t mem_size = sizeof(vm->stack) / sizeof(uint8_t);
+  for (uint16_t idx = 0; idx < mem_size; ) {
+    uint16_t addr = idx;
+    uint8_t M00 = vm->stack[idx++];
+    uint8_t M01 = vm->stack[idx++];
+    uint8_t M02 = vm->stack[idx++];
+    uint8_t M03 = vm->stack[idx++];
+    if (M00 || M01 || M02 || M03) {
+      printf("%4x: %2x %2x %2x %2x\n", addr, M00, M01, M02, M03);
+    }
+  }
 }
 
 void VM__setNZ(struct VM* vm, uint8_t value) {

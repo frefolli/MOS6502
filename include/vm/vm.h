@@ -27,8 +27,11 @@ struct VM {
 
 void VM__clear(struct VM* vm);
 void VM__reset(struct VM* vm);
+void VM__load(struct VM* vm, uint8_t* program, uint16_t program_length);
 void VM__step(struct VM* vm);
 void VM__dump(struct VM* vm);
+void VM__dump_mem(struct VM* vm);
+void VM__dump_stack(struct VM* vm);
 uint8_t VM__read_next_opcode_from_mem(struct VM* vm);
 uint16_t VM__read_next_immediate_from_mem(struct VM* vm);
 uint16_t VM__read_next_address_from_mem(struct VM* vm);

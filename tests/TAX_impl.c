@@ -2,10 +2,10 @@
 #include <vm/opcodes.h>
 
 int main(void) {
+  uint8_t program[] = {TAX_impl};
   struct VM vm;
   VM__clear(&vm);
   VM__reset(&vm);
-  vm.mem[0] = TAX_impl;
-  vm.mem[1] = 0x00;
+  VM__load(&vm, program, sizeof(program) / sizeof(uint8_t));
   VM__step(&vm);
 }
