@@ -2,5 +2,5 @@
 #include <vm/macros.h>
 
 void VM__PHA_impl(struct VM* vm) {
-  TODO();
+  vm->stack[vm->SP++] = vm->A;
 }

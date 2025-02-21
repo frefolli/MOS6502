@@ -2,5 +2,6 @@
 #include <vm/macros.h>
 
 void VM__TXS_impl(struct VM* vm) {
-  TODO();
+  VM__setNZ(vm, vm->X);
+  vm->SP = vm->X;
 }

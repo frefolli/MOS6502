@@ -2,5 +2,6 @@
 #include <vm/macros.h>
 
 void VM__TXA_impl(struct VM* vm) {
-  TODO();
+  VM__setNZ(vm, vm->X);
+  vm->A = vm->X;
 }

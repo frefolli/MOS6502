@@ -2,5 +2,5 @@
 #include <vm/macros.h>
 
 void VM__PLP_impl(struct VM* vm) {
-  TODO();
+  *((uint8_t*) &vm->SR) = vm->stack[--vm->SP];
 }

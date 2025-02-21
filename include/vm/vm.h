@@ -9,7 +9,7 @@ struct VM {
   uint8_t A;
   uint8_t X;
   uint8_t Y;
-  struct {
+  struct StatusRegister {
     uint8_t N : 1; // Negative
     uint8_t V : 1; // Overflow
     uint8_t _ : 1; // Ignored
