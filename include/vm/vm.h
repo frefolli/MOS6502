@@ -1,6 +1,7 @@
 #ifndef VM_VM_H
 #define VM_VM_H
 #include <stdint.h>
+#include <stdbool.h>
 
 struct VM {
   uint8_t mem[64 * 1024];
@@ -11,7 +12,7 @@ struct VM {
   struct StatusRegister {
     uint8_t N : 1; // Negative
     uint8_t V : 1; // Overflow
-    uint8_t _ : 1; // Ignored
+    uint8_t H : 1; // 6502 Ignored (now Halt bit)
     uint8_t B : 1; // Break
     uint8_t D : 1; // Decimal
     uint8_t I : 1; // Interrupt
@@ -22,6 +23,7 @@ struct VM {
   uint16_t NMI;
   uint16_t RES;
   uint16_t IRQ;
+  void (*interrupt_handler)(struct VM* vm);
 };
 
 enum InterruptType {
@@ -50,4 +52,5 @@ struct StatusRegister VM__pull_SR_from_stack(struct VM* vm);
 void VM__push_SR_to_stack(struct VM* vm, struct StatusRegister SR);
 void VM__setNZ(struct VM* vm, uint8_t value);
 enum InterruptType VM__detect_interrupt(struct VM*);
+void VM__execute(struct VM* vm, uint8_t* program, uint16_t program_length);
 #endif//VM_H

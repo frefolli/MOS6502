@@ -5,26 +5,9 @@
 #include <string.h>
 #include <vm.h>
 
-void execute_program(struct VM* vm, uint8_t* program, uint16_t program_length) {
-  VM__clear(vm);
-  VM__dump(vm);
-  VM__reset(vm);
-  VM__dump(vm);
-  VM__load(vm, program, program_length);
-  printf("Pre-execution\n");
-  VM__dump_zeropage(vm);
-  VM__dump(vm);
-  uint16_t end_of_program = vm->PC + program_length;
-  while (vm->PC < end_of_program) {
-    VM__step(vm);
-    if (VM__detect_interrupt(vm) == SOFTWARE_INTERRUPT) {
-      printf("Software interrupt occurred\n");
-      break;
-    }
-  }
-  printf("Post-execution\n");
-  VM__dump_zeropage(vm);
-  VM__dump(vm);
+void handle_interrupts(struct VM* vm) {
+  printf("Software interrupt!\n");
+  vm->SR.H = true;
 }
 
 bool write_file(const char* filepath, const uint8_t* program, uint16_t program_length) {
@@ -103,6 +86,8 @@ int main(int argc, char **argv) {
     LDA_zpg, 0x00,
     BNE_rel, -0x10,
     LDA_zpg, 0x02,
+
+    BRK_impl
   };
 
   if (argc > 1) {
@@ -114,7 +99,9 @@ int main(int argc, char **argv) {
       uint8_t* program = NULL;
       uint16_t program_length = 0;
       assert(read_file(input_file, &program, &program_length));
-      execute_program(&vm, program, program_length);
+      VM__clear(&vm);
+      vm.interrupt_handler = handle_interrupts;
+      VM__execute(&vm, program, program_length);
     } else if (strcmp("-o", argv[1]) == 0) {
       const char* output_file = "program.o65";
       if (argc > 2) {

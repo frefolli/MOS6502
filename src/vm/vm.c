@@ -7,6 +7,7 @@
 #include <assert.h>
 
 #define BASE_ADDRESS 0x0600
+#define IRQ_ADDRESS 0x05ff
 #define PAGE_SIZE 0x100
 #define STACK_START_ADDRESS 0x0100
 #define STACK_END_ADDRESS 0x01ff
@@ -16,6 +17,7 @@ void VM__clear(struct VM* vm) {
     return;
   (void)memset(vm, 0, sizeof(struct VM));
   vm->RES = BASE_ADDRESS;
+  vm->IRQ = IRQ_ADDRESS;
 }
 
 void VM__reset(struct VM* vm) {
@@ -325,4 +327,18 @@ enum InterruptType VM__detect_interrupt(struct VM* vm) {
   if (SR.B)
     return SOFTWARE_INTERRUPT;
   return HARDWARE_INTERRUPT;
+}
+
+void VM__execute(struct VM* vm, uint8_t* program, uint16_t program_length) {
+  VM__reset(vm);
+  VM__load(vm, program, program_length);
+  uint16_t end_of_program = vm->PC + program_length;
+  while (!vm->SR.H && vm->PC < end_of_program) {
+    VM__step(vm);
+    if (VM__detect_interrupt(vm) == SOFTWARE_INTERRUPT) {
+      if (vm->interrupt_handler != NULL) {
+        vm->interrupt_handler(vm);
+      }
+    }
+  }
 }
