@@ -4,7 +4,7 @@
 int main(int argc, char **argv) {
   struct VM vm;
   uint32_t a = 0x12344321, b = 0x7428f234;
-  uint32_t c = a + b;
+  uint32_t c = a - b;
   uint8_t program[] = {
     // Setup zpg
     // a
@@ -26,19 +26,19 @@ int main(int argc, char **argv) {
     LDY_imm, ((b >> 24) & 0xff),
     STY_zpg, 0x07,
     // Set carry flag
-    CLC_impl,
+    SEC_impl,
     // c: a + b
     LDA_zpg, 0x00,
-    ADC_zpg, 0x04,
+    SBC_zpg, 0x04,
     STA_zpg, 0x08,
     LDA_zpg, 0x01,
-    ADC_zpg, 0x05,
+    SBC_zpg, 0x05,
     STA_zpg, 0x09,
     LDA_zpg, 0x02,
-    ADC_zpg, 0x06,
+    SBC_zpg, 0x06,
     STA_zpg, 0x0a,
     LDA_zpg, 0x03,
-    ADC_zpg, 0x07,
+    SBC_zpg, 0x07,
     STA_zpg, 0x0b,
   };
   uint16_t program_length = sizeof(program) / sizeof(uint8_t);

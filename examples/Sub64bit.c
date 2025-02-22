@@ -5,7 +5,7 @@
 int main(int argc, char **argv) {
   struct VM vm;
   uint64_t a = 0x1122334455667788, b = 0x8877665544332211;
-  uint64_t c = a + b;
+  uint64_t c = a - b;
   uint8_t program[] = {
     // i = 0
     LDA_imm, 0,
@@ -46,12 +46,12 @@ int main(int argc, char **argv) {
     STX_zpg, 0x10,
     LDX_imm, ((b >> 8 * 7) & 0xff),
     STX_zpg, 0x11,
-    CLC_impl,
+    SEC_impl,
     // c{i}: a{i} + b{i}
     LDY_imm, 0x02,
     LDA_ind_Y, 0x00,
     LDY_imm, 0x0a,
-    ADC_ind_Y, 0x00,
+    SBC_ind_Y, 0x00,
     LDY_imm, 0x12,
     STA_ind_Y, 0x00,
     // cycle over i

@@ -46,3 +46,31 @@ test_Stack = executable('test_Stack', [
   include_directories: ['../include'],
   link_with: libvm)
 test('Stack', test_Stack)
+
+test_Sub8bit = executable('test_Sub8bit', [
+    './Sub8bit.c',
+  ], install : false,
+  include_directories: ['../include'],
+  link_with: libvm)
+test('Sub8bit', test_Sub8bit)
+
+test_Sub16bit = executable('test_Sub16bit', [
+    './Sub16bit.c',
+  ], install : false,
+  include_directories: ['../include'],
+  link_with: libvm)
+test('Sub16bit', test_Sub16bit)
+
+test_Sub32bit = executable('test_Sub32bit', [
+    './Sub32bit.c',
+  ], install : false,
+  include_directories: ['../include'],
+  link_with: libvm)
+test('Sub32bit', test_Sub32bit)
+
+test_Sub64bit = executable('test_Sub64bit', [
+    './Sub64bit.c',
+  ], install : false,
+  include_directories: ['../include'],
+  link_with: libvm)
+test('Sub64bit', test_Sub64bit)

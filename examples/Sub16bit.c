@@ -1,10 +1,11 @@
 #include <assert.h>
+#include <stdio.h>
 #include <vm.h>
 
 int main(int argc, char **argv) {
   struct VM vm;
   uint16_t a = 0x4321, b = 0xf234;
-  uint16_t c = a + b;
+  uint16_t c = a - b;
   uint8_t program[] = {
     // Setup zpg
     // a: 0x12
@@ -17,13 +18,14 @@ int main(int argc, char **argv) {
     STY_zpg, 0x02,
     LDY_imm, ((b >> 8) & 0xff),
     STY_zpg, 0x03,
+    // Setup carry flag
     // c: a + b
+    SEC_impl,
     LDA_zpg, 0x00,
-    CLC_impl,
-    ADC_zpg, 0x02,
+    SBC_zpg, 0x02,
     STA_zpg, 0x04,
     LDA_zpg, 0x01,
-    ADC_zpg, 0x03,
+    SBC_zpg, 0x03,
     STA_zpg, 0x05
   };
   uint16_t program_length = sizeof(program) / sizeof(uint8_t);

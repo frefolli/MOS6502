@@ -15,6 +15,7 @@ int main(int argc, char **argv) {
     STY_zpg, 0x01,
     // c: a + b
     LDA_zpg, 0x00,
+    CLC_impl,
     ADC_zpg, 0x01,
     STA_zpg, 0x02
   };

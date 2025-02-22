@@ -3,28 +3,22 @@
 
 int main(int argc, char **argv) {
   struct VM vm;
-  uint16_t a = 0x4321, b = 0xf234;
-  uint16_t c = a + b;
+  uint8_t a = 0x12, b = 0x2f;
+  uint8_t c = a - b;
   uint8_t program[] = {
     // Setup zpg
     // a: 0x12
-    LDX_imm, (a & 0xff),
+    LDX_imm, a,
     STX_zpg, 0x00,
-    LDX_imm, ((a >> 8) & 0xff),
-    STX_zpg, 0x01,
     // b: 0x2f
-    LDY_imm, (b & 0xff),
-    STY_zpg, 0x02,
-    LDY_imm, ((b >> 8) & 0xff),
-    STY_zpg, 0x03,
+    LDY_imm, b,
+    STY_zpg, 0x01,
+    // Setup carry flag
+    SEC_impl,
     // c: a + b
     LDA_zpg, 0x00,
-    CLC_impl,
-    ADC_zpg, 0x02,
-    STA_zpg, 0x04,
-    LDA_zpg, 0x01,
-    ADC_zpg, 0x03,
-    STA_zpg, 0x05
+    SBC_zpg, 0x01,
+    STA_zpg, 0x02
   };
   uint16_t program_length = sizeof(program) / sizeof(uint8_t);
   VM__clear(&vm);
@@ -34,6 +28,6 @@ int main(int argc, char **argv) {
   while (vm.PC < end_of_program) {
     VM__step(&vm);
   }
-  uint16_t d = (vm.mem[4]) + (vm.mem[5] << 8);
+  uint8_t d = vm.mem[2];
   assert(c == d);
 }
