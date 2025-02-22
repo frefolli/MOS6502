@@ -24,6 +24,12 @@ struct VM {
   uint16_t IRQ;
 };
 
+enum InterruptType {
+  NO_INTERRUPT = 0x00,
+  SOFTWARE_INTERRUPT = 0x01,
+  HARDWARE_INTERRUPT = 0x02
+};
+
 void VM__clear(struct VM* vm);
 void VM__reset(struct VM* vm);
 void VM__load(struct VM* vm, uint8_t* program, uint16_t program_length);
@@ -43,4 +49,5 @@ void VM__push_word_to_stack(struct VM* vm, uint16_t word);
 struct StatusRegister VM__pull_SR_from_stack(struct VM* vm);
 void VM__push_SR_to_stack(struct VM* vm, struct StatusRegister SR);
 void VM__setNZ(struct VM* vm, uint8_t value);
+enum InterruptType VM__detect_interrupt(struct VM*);
 #endif//VM_H

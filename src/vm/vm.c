@@ -315,3 +315,14 @@ void VM__push_SR_to_stack(struct VM* vm, struct StatusRegister SR) {
   *(struct StatusRegister*)(vm->mem + STACK_END_ADDRESS - idx) = SR;
   vm->SP++;
 }
+
+enum InterruptType VM__detect_interrupt(struct VM* vm) {
+  if (vm->PC != vm->IRQ)
+    return NO_INTERRUPT;
+
+  uint8_t idx = vm->SP - 1;
+  struct StatusRegister SR = *(struct StatusRegister*)(vm->mem + STACK_END_ADDRESS - idx);
+  if (SR.B)
+    return SOFTWARE_INTERRUPT;
+  return HARDWARE_INTERRUPT;
+}

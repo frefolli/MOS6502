@@ -17,6 +17,10 @@ void execute_program(struct VM* vm, uint8_t* program, uint16_t program_length) {
   uint16_t end_of_program = vm->PC + program_length;
   while (vm->PC < end_of_program) {
     VM__step(vm);
+    if (VM__detect_interrupt(vm) == SOFTWARE_INTERRUPT) {
+      printf("Software interrupt occurred\n");
+      break;
+    }
   }
   printf("Post-execution\n");
   VM__dump_zeropage(vm);
