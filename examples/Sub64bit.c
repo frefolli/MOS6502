@@ -47,7 +47,9 @@ int main(int argc, char **argv) {
     LDX_imm, ((b >> 8 * 7) & 0xff),
     STX_zpg, 0x11,
     SEC_impl,
+    PHP_impl,
     // c{i}: a{i} + b{i}
+    PLP_impl,
     LDY_imm, 0x02,
     LDA_ind_Y, 0x00,
     LDY_imm, 0x0a,
@@ -59,7 +61,7 @@ int main(int argc, char **argv) {
     INC_zpg, 0x00,
     LDA_imm, 0x08,
     CMP_zpg, 0x00,
-    BNE_rel, -0x15,
+    BNE_rel, -0x16,
     PLP_impl,
   };
   uint16_t program_length = sizeof(program) / sizeof(uint8_t);
