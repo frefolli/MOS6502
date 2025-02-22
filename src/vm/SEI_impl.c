@@ -2,5 +2,5 @@
 #include <vm/macros.h>
 
 void VM__SEI_impl(struct VM* vm) {
-  TODO();
+  vm->SR.I = 1;
 }

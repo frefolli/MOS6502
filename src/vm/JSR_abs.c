@@ -4,7 +4,6 @@
 
 void VM__JSR_abs(struct VM* vm) {
   uint16_t addr = VM__address__abs(vm);
-  vm->stack[vm->SP++] = (vm->PC & 0xff);
-  vm->stack[vm->SP++] = ((vm->PC >> 8) & 0xff);
+  VM__push_word_to_stack(vm, vm->PC);
   vm->PC = addr;
 }

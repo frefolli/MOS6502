@@ -4,7 +4,6 @@
 
 struct VM {
   uint8_t mem[64 * 1024];
-  uint8_t stack[256];
   uint16_t PC;
   uint8_t A;
   uint8_t X;
@@ -37,5 +36,11 @@ uint8_t VM__read_next_opcode_from_mem(struct VM* vm);
 uint16_t VM__read_next_immediate_from_mem(struct VM* vm);
 uint16_t VM__read_next_address_from_mem(struct VM* vm);
 uint16_t VM__read_address_from_mem(struct VM* vm, uint16_t addr);
+uint8_t VM__pull_byte_from_stack(struct VM* vm);
+void VM__push_byte_to_stack(struct VM* vm, uint8_t byte);
+uint16_t VM__pull_word_from_stack(struct VM* vm);
+void VM__push_word_to_stack(struct VM* vm, uint16_t word);
+struct StatusRegister VM__pull_SR_from_stack(struct VM* vm);
+void VM__push_SR_to_stack(struct VM* vm, struct StatusRegister SR);
 void VM__setNZ(struct VM* vm, uint8_t value);
 #endif//VM_H

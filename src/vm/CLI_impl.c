@@ -2,5 +2,5 @@
 #include <vm/macros.h>
 
 void VM__CLI_impl(struct VM* vm) {
-  TODO();
+  vm->SR.I = 0;
 }

@@ -2,5 +2,5 @@
 #include <vm/macros.h>
 
 void VM__CLV_impl(struct VM* vm) {
-  TODO();
+  vm->SR.V = 0;
 }

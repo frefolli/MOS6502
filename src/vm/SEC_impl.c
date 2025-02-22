@@ -2,5 +2,5 @@
 #include <vm/macros.h>
 
 void VM__SEC_impl(struct VM* vm) {
-  TODO();
+  vm->SR.C = 1;
 }

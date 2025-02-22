@@ -39,3 +39,10 @@ test_StackSR = executable('test_StackSR', [
   include_directories: ['../include'],
   link_with: libvm)
 test('StackSR', test_StackSR)
+
+test_Stack = executable('test_Stack', [
+    './Stack.c',
+  ], install : false,
+  include_directories: ['../include'],
+  link_with: libvm)
+test('Stack', test_Stack)

@@ -8,6 +8,8 @@
 
 #define BASE_ADDRESS 0x0600
 #define PAGE_SIZE 0x100
+#define STACK_START_ADDRESS 0x0100
+#define STACK_END_ADDRESS 0x01ff
 
 void VM__clear(struct VM* vm) {
   if (vm == NULL)
@@ -220,13 +222,14 @@ void VM__dump_mem(struct VM* vm) {
 }
 
 void VM__dump_stack(struct VM* vm) {
-  uint16_t mem_size = sizeof(vm->stack) / sizeof(uint8_t);
-  for (uint16_t idx = 0; idx < mem_size; ) {
+  uint16_t stack_size = 0x100;
+  uint8_t* stack = vm->mem + STACK_START_ADDRESS;
+  for (uint16_t idx = 0; idx < stack_size; ) {
     uint16_t addr = idx;
-    uint8_t M00 = vm->stack[idx++];
-    uint8_t M01 = vm->stack[idx++];
-    uint8_t M02 = vm->stack[idx++];
-    uint8_t M03 = vm->stack[idx++];
+    uint8_t M00 = stack[idx++];
+    uint8_t M01 = stack[idx++];
+    uint8_t M02 = stack[idx++];
+    uint8_t M03 = stack[idx++];
     if (M00 || M01 || M02 || M03) {
       printf("%4x: %2x %2x %2x %2x\n", addr, M00, M01, M02, M03);
     }
@@ -274,4 +277,41 @@ uint16_t VM__read_address_from_mem(struct VM* vm, uint16_t addr) {
   value = vm->mem[addr];
   value += (vm->mem[addr + 1] << 8);
   return value;
+}
+
+uint8_t VM__pull_byte_from_stack(struct VM* vm) {
+  uint8_t idx = vm->SP - 1;
+  uint8_t byte = *(vm->mem + STACK_END_ADDRESS - idx);
+  vm->SP--;
+  return byte;
+}
+
+void VM__push_byte_to_stack(struct VM* vm, uint8_t byte) {
+  uint8_t idx = vm->SP;
+  *(vm->mem + STACK_END_ADDRESS - idx) = byte;
+  vm->SP++;
+}
+
+uint16_t VM__pull_word_from_stack(struct VM* vm) {
+  uint16_t hi = (VM__pull_byte_from_stack(vm) << 8);
+  uint16_t lo = VM__pull_byte_from_stack(vm);
+  return hi + lo;
+}
+
+void VM__push_word_to_stack(struct VM* vm, uint16_t word) {
+  VM__push_byte_to_stack(vm, word & 0xff);
+  VM__push_byte_to_stack(vm, ((word >> 8) % 0xff));
+}
+
+struct StatusRegister VM__pull_SR_from_stack(struct VM* vm) {
+  uint8_t idx = vm->SP - 1;
+  struct StatusRegister SR = *(struct StatusRegister*)(vm->mem + STACK_END_ADDRESS - idx);
+  vm->SP--;
+  return SR;
+}
+
+void VM__push_SR_to_stack(struct VM* vm, struct StatusRegister SR) {
+  uint8_t idx = vm->SP;
+  *(struct StatusRegister*)(vm->mem + STACK_END_ADDRESS - idx) = SR;
+  vm->SP++;
 }
